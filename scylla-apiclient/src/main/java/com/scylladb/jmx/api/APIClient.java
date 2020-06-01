@@ -37,6 +37,8 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.logging.LoggingFeature;
+import java.util.logging.Level;
 
 import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import com.scylladb.jmx.utils.SnapshotDetailsTabularData;
@@ -54,7 +56,12 @@ public class APIClient {
         this.config = config;
         this.clientConfig = new ClientConfig();
         clientConfig.register(new JacksonJaxbJsonProvider());
-        this.client = ClientBuilder.newClient(clientConfig);
+        LoggingFeature feature = new LoggingFeature(logger, Level.INFO, LoggingFeature.Verbosity.PAYLOAD_TEXT, 8192);
+        this.client = ClientBuilder
+		.newBuilder()
+		.withConfig(clientConfig)
+		.register(feature)
+		.build();
     }
 
     private String getCacheKey(String key, MultivaluedMap<String, String> param, long duration) {

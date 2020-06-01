@@ -6,6 +6,9 @@ package com.scylladb.jmx.main;
 import static java.lang.management.ManagementFactory.getPlatformMBeanServer;
 import static java.util.Arrays.asList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.bridge.SLF4JBridgeHandler;
 import java.lang.reflect.Constructor;
 
 import javax.management.MBeanServer;
@@ -27,11 +30,20 @@ import com.scylladb.jmx.api.APIConfig;
 import com.scylladb.jmx.metrics.APIMBean;
 
 public class Main {
+    static {
+	    /*
+        SLF4JBridgeHandler.removeHandlersForRootLogger();
+        SLF4JBridgeHandler.install();
+	*/
+    }
+
     // todo: command line options. Make us an agent class (also)
     private static final APIConfig config = new APIConfig();
     public static final APIClient client = new APIClient(config);
 
     public static void main(String[] args) throws Exception {
+	        Logger logger = LoggerFactory.getLogger(Main.class);
+    logger.debug("Hello World");
         System.out.println("Connecting to " + config.getBaseUrl());
         System.out.println("Starting the JMX server");
 
